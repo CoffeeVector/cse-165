@@ -130,4 +130,14 @@ class Tetris {
             }
         }
     }
+
+    void print() {
+        int x, y, z;
+        for (int i = 0; i < w*l*h; i++) {
+            ind2sub(i, x, y, z);
+            if (state[x][y][z]) {
+                printf("(%d, %d, %d)\n", x, y, z);
+            }
+        }
+    }
 };
