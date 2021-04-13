@@ -90,6 +90,11 @@ class Tetris {
         };
 
         int o[] = {1, 1, 9}; // origin
+        for (auto coord: coords) {
+            if (state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]]) { // if not null, end the game, you lose.
+
+            }
+        }
 
         for (auto coord: coords) {
             state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] = new Block{r, g, b, true};
