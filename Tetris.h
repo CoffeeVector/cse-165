@@ -1,3 +1,5 @@
+#ifndef TETRIS_H
+#define TETRIS_H
 // I pretty much winged this whole thing, so expect lots of bugs. -KZ
 
 enum Moves {
@@ -141,3 +143,4 @@ class Tetris {
         }
     }
 };
+#endif
