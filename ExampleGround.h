@@ -3,6 +3,8 @@
 
 #include "GObject.h"
 
+// this is a very basic class that does nothing on it's own.
+// it defines the draw and update methods, which is neccessary as they are both virtual
 class ExampleGround : public GObject {
 public:
     ExampleGround();
