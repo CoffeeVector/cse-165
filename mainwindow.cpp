@@ -25,7 +25,12 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
     GObject::window = this;
 
     objects = new std::vector<GObject*>();
-    objects -> push_back(new ExampleGround(0.0f, 0.0f, -1.0f));
+    objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
+    //objects -> push_back(new ExampleGround(0.0f, 0.0f, 1.0f));
+    //objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
+    //objects -> push_back(new ExampleGround(0.0f, 1.0f, 0.0f));
+    //objects -> push_back(new ExampleGround(-1.0f, 0.0f, 0.0f));
+    //objects -> push_back(new ExampleGround(1.0f, 0.0f, 0.0f));
     r = 0;
 }
 
@@ -52,7 +57,16 @@ void MainWindow::resizeGL(int w, int h) {
     glLoadIdentity();
 
     // Sets up a perspective projection matrix
-    glFrustum(-1, +1, -((float)h)/w, ((float)h)/w, 0.1f, 10000.0f);
+    float fov = 1.39f; // Field of View
+    float tanfov = tanf(fov/2);
+    float aspect = ((float)w)/h;
+    float zFar = 1000.0f;
+    float zNear = 0.01f;
+    float mat[16] = {1/(aspect*tanfov),0.0f,0.0f,0.0f,
+                     0.0f,(1/tanfov),0.0f,0.0f,
+                     0.0f,0.0f,-((zFar + zNear)/(zFar-zNear)),-1.0f,
+                     0.0f,0.0f,-((2.0f*zFar*zNear)/(zFar-zNear)),0.0f};
+    glLoadMatrixf(mat);
 
     //initialize modelview matrix
     glMatrixMode(GL_MODELVIEW);
@@ -77,7 +91,10 @@ void MainWindow::paintGL() {
 
 
     for (int i = 0; i < objects -> size(); i++) {
-        objects -> at(i) -> draw(0.0f,0.0f,0.0f, r,0.0f,0.0f);
+        objects -> at(i) -> draw(0.0f,0.0f,0.0f,r,0.0f,0.0f);
+    }
+    if (r >= 90.0f) {
+        throw("aaa");
     }
 
     r+= 0.1;

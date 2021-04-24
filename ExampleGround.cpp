@@ -43,11 +43,13 @@ void ExampleGround::draw (float cam_x, float cam_y, float cam_z, float cam_x_r, 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glTranslatef(x,y,z);
     glRotatef(cam_x_r, 1.0f,0.0f,0.0f);
     glRotatef(cam_y_r, 0.0f,1.0f,0.0f);
     glRotatef(cam_z_r, 0.0f,0.0f,1.0f);
+    glTranslatef(x,y,z);
     glTranslatef(cam_x,cam_y,cam_z);
+
+
 
     glBegin(GL_POLYGON);
         glColor3f(1.0f, 0.0f, 0.0f); //red
@@ -57,12 +59,16 @@ void ExampleGround::draw (float cam_x, float cam_y, float cam_z, float cam_x_r, 
         glVertex3f(-10.0f, 0.0f, 10.0f);
      glEnd();
      glBegin(GL_POLYGON);
-         glColor3f(1.0f, 0.0f, 0.0f); //red
-         glVertex3f(1.0f, 1.0f, -1.0f);
-         glVertex3f(1.0f, -1.0f, -1.0f);
-         glVertex3f(-1.0f, -1.0f, -1.0f);
-         glVertex3f(-1.0f, 1.0f, -1.0f);
+         glColor3f(0.6f, 0.6f, 0.6f); //grey
+         glVertex3f(1.0f, 2.0f, -1.0f);
+         glVertex3f(1.0f, 0.0f, -1.0f);
+         glVertex3f(-1.0f, 0.0f, -1.0f);
+         glVertex3f(-1.0f, 2.0f, -1.0f);
       glEnd();
+
+
+
+
 
 
     glFlush();
