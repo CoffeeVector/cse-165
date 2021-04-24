@@ -40,17 +40,17 @@ ExampleGround::ExampleGround(float _x, float _y, float _z) : GObject(_x,_y,_z) {
 ExampleGround::~ExampleGround() {}
 
 // This is the most basic object possible: it is nothing but a square.
-void ExampleGround::draw (float cam_x, float cam_y, float cam_z, float cam_x_r, float cam_y_r, float cam_z_r) {
+void ExampleGround::draw () {
     // This should not be changed, as this positions the object
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     // Positions the camera
-    glRotatef(cam_x_r, 1.0f,0.0f,0.0f);
-    glRotatef(cam_y_r, 0.0f,1.0f,0.0f);
-    glRotatef(cam_z_r, 0.0f,0.0f,1.0f);
+    glRotatef(*cam_x_r, 1.0f,0.0f,0.0f);
+    glRotatef(*cam_y_r, 0.0f,1.0f,0.0f);
+    glRotatef(*cam_z_r, 0.0f,0.0f,1.0f);
     glTranslatef(x,y,z);
-    glTranslatef(cam_x,cam_y,cam_z);
+    glTranslatef(*cam_x,*cam_y,*cam_z);
 
     // Your code should go here.
     glBegin(GL_POLYGON);

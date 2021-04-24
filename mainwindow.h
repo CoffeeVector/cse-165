@@ -56,7 +56,7 @@ private:
     // If you guys want to
 
     float lastX, lastY; // keeps track of where the cursor is
-    float r;
+    float cam_x, cam_y, cam_z, cam_x_r, cam_y_r, cam_z_r; // The position of the camera
     std::vector<GObject*> *objects;
 };
 

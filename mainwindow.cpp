@@ -24,14 +24,17 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
     GObject::context = context;
     GObject::window = this;
 
+    // Instead of sending the camera location to the objects everytime, I just set up some static pointers that get us the same thing
+    GObject::cam_x = &cam_x;
+    GObject::cam_y = &cam_y;
+    GObject::cam_z = &cam_z;
+    GObject::cam_x_r = &cam_x_r;
+    GObject::cam_y_r = &cam_y_r;
+    GObject::cam_z_r = &cam_z_r;
+
+
     objects = new std::vector<GObject*>();
     objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
-    //objects -> push_back(new ExampleGround(0.0f, 0.0f, 1.0f));
-    //objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
-    //objects -> push_back(new ExampleGround(0.0f, 1.0f, 0.0f));
-    //objects -> push_back(new ExampleGround(-1.0f, 0.0f, 0.0f));
-    //objects -> push_back(new ExampleGround(1.0f, 0.0f, 0.0f));
-    r = 0;
 }
 
 
@@ -80,24 +83,15 @@ void MainWindow::paintGL() {
     glClearColor(0.5f,0.5f,0.5f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Reset modelview matrix
-    // glMatrixMode(GL_PROJECTION);
-    // glLoadIdentity();
-
-    // 3D transformation
-
-    // glMatrixMode(GL_MODELVIEW);
-    // glTranslatef(0.0f,0.0f,0.0f);
-
-
     for (int i = 0; i < objects -> size(); i++) {
-        objects -> at(i) -> draw(0.0f,0.0f,0.0f,r,0.0f,0.0f);
-    }
-    if (r >= 90.0f) {
-        throw("aaa");
+        objects -> at(i) -> draw();
     }
 
-    r+= 0.1;
+
+
+
+
+
 }
 
 
