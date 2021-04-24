@@ -39,6 +39,12 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
 
 
 MainWindow::~MainWindow() {
+    // Frees the memory from this
+    while (objects->size() != 0) {
+        objects->pop_back();
+    }
+
+
     delete context; // For some reason the context wasn't being deleted before.
 }
 

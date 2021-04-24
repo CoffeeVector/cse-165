@@ -16,6 +16,7 @@ SOURCES += main.cpp \
 
 
 HEADERS  += mainwindow.h \
+	Brick.h \
 	ExampleGround.h \
 	GObject.h
 
