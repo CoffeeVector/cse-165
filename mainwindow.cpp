@@ -2,6 +2,7 @@
 
 
 MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
+
     setSurfaceType(QWindow::OpenGLSurface);
 
     // Setup opengl format
@@ -16,7 +17,9 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
     context->create();
     context->makeCurrent(this);
 
-
+    cursor = QCursor(Qt::BlankCursor);
+    QApplication::setOverrideCursor(cursor);
+    QApplication::changeOverrideCursor(cursor);
 
     // Not entirely sure what this does, besides setting up a timer. Might be important for refresh rate, which seemed to be done manually.
     QTimer *timer = new QTimer(this);
@@ -45,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
 MainWindow::~MainWindow() {
     // Frees the memory from this
     while (objects->size() != 0) {
+        free(objects->back());
         objects->pop_back();
     }
 
@@ -85,6 +89,10 @@ void MainWindow::resizeGL(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    lastX = w/2;
+    lastY = h/2;
+    cursor.setPos(this->x() + lastX,this->y() + lastY);
+
 }
 
 
@@ -113,9 +121,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_A) {
         key_a = true;
     }
+    if (event->key() == Qt::Key_Escape) {
+        qApp->exit();
+    }
 
 }
-
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     // If you need to check more keys, also add them here
@@ -125,6 +135,26 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_A){
         key_a = false;
     }
+
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event) {
+    float newX = event->x(), newY = event->y();
+    float deltaX = newX - lastX, deltaY = newY - lastY;
+
+    cursor.setPos(this->x() + lastX,this->y() + lastY);
+    event->accept();
+
+    float sensitivity = 0.1;
+
+    cam_y_r += deltaX * sensitivity;
+    cam_x_r += deltaY * sensitivity;
+
+    cursor.setPos(this->x() + lastX,this->y() + lastY);
 
 }
 

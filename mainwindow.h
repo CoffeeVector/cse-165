@@ -8,6 +8,8 @@
 #include <QtOpenGL>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QCursor>
+#include <QGuiApplication>
 #include <vector>
 
 // To make things simpler, I'm using glu to generate our perspective matrix
@@ -42,9 +44,9 @@ protected:
     void keyPressEvent(QKeyEvent *); // logs which keys are pressed
     void keyReleaseEvent(QKeyEvent *); // logs which keys are released
 
-    //void mousePressEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *);
 
-    //void mouseMoveEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
 public slots:
 
     void UpdateAnimation();
@@ -65,6 +67,8 @@ private:
     bool key_w=0, key_s=0, key_a=0,key_d=0; // keeps track of which keys are pressed
 
     std::vector<GObject*> *objects;
+
+    QCursor cursor;
 };
 
 

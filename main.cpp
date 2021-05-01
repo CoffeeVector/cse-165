@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     w.setVisibility(QWindow::FullScreen); //Makes the window go fullscreen
     w.resize(widget.screenGeometry(widget.primaryScreen()).x(), widget.screenGeometry(widget.primaryScreen()).y()); // I really don't think this is neccessary, but its here anyway
 
+    w.setMouseGrabEnabled(true);
+
     if (w.visibility() != 5) {
         w.resize(960, 540);
     }
