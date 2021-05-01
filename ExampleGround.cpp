@@ -54,7 +54,7 @@ void ExampleGround::draw () {
 
     // Your code should go here.
     glBegin(GL_POLYGON);
-        glColor3f(0.6f, 0.6f, 0.6f); // grey // I'll work on getting textures working if you want me to.
+        glColor3f(0.2f, 0.8f, 0.1f); // grey // I'll work on getting textures working if you want me to.
         glVertex3f(100.0f, 0.0f, 100.0f);
         glVertex3f(100.0f, 0.0f, -100.0f);
         glVertex3f(-100.0f, 0.0f, -100.0f);

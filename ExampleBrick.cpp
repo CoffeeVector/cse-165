@@ -27,7 +27,7 @@ void ExampleBrick::draw() {
 
     // Your code should go here.
     glBegin(GL_POLYGON); // Bottom
-        glColor3f(0.9f, 0.9f, 0.9f);
+        glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, -0.5f, 0.5f);
         glVertex3f(0.5f, -0.5f, -0.5f);
         glVertex3f(-0.5f, -0.5f, -0.5f);
@@ -35,7 +35,7 @@ void ExampleBrick::draw() {
     glEnd();
 
     glBegin(GL_POLYGON); // Top
-        glColor3f(0.9f, 0.9f, 0.9f);
+        glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, 0.5f, 0.5f);
         glVertex3f(0.5f, 0.5f, -0.5f);
         glVertex3f(-0.5f, 0.5f, -0.5f);
@@ -43,7 +43,7 @@ void ExampleBrick::draw() {
     glEnd();
 
     glBegin(GL_POLYGON); // Front
-        glColor3f(0.9f, 0.9f, 0.9f);
+        glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, 0.5f, 0.5f);
         glVertex3f(0.5f, -0.5f, 0.5f);
         glVertex3f(-0.5f, -0.5f, 0.5f);
@@ -51,9 +51,25 @@ void ExampleBrick::draw() {
     glEnd();
 
     glBegin(GL_POLYGON); // Back
-        glColor3f(0.9f, 0.9f, 0.9f);
+        glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, 0.5f, -0.5f);
         glVertex3f(0.5f, -0.5f, -0.5f);
+        glVertex3f(-0.5f, -0.5f, -0.5f);
+        glVertex3f(-0.5f, 0.5f, -0.5f);
+    glEnd();
+
+    glBegin(GL_POLYGON); // Left
+        glColor3f(0.9f, 0.2f, 0.2f);
+        glVertex3f(0.5f, 0.5f, 0.5f);
+        glVertex3f(0.5f, -0.5f, 0.5f);
+        glVertex3f(0.5f, -0.5f, -0.5f);
+        glVertex3f(0.5f, 0.5f, -0.5f);
+    glEnd();
+
+    glBegin(GL_POLYGON); // Right
+        glColor3f(0.9f, 0.2f, 0.2f);
+        glVertex3f(-0.5f, 0.5f, 0.5f);
+        glVertex3f(-0.5f, -0.5f, 0.5f);
         glVertex3f(-0.5f, -0.5f, -0.5f);
         glVertex3f(-0.5f, 0.5f, -0.5f);
     glEnd();
@@ -64,7 +80,10 @@ void ExampleBrick::draw() {
 }
 
 void ExampleBrick::update () {
-
-
-
+    if (!grounded) {
+        y -= 0.05;
+        if (y - 0.5 <= ground->y) {
+            grounded = true;
+        }
+    }
 }

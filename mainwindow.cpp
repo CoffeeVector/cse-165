@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
 
     objects = new std::vector<GObject*>();
     objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
+    objects -> push_back(new ExampleBrick(0.0f, 9.0f, -9.0f, (ExampleGround*)objects->front()));
 
 }
 
@@ -93,8 +94,8 @@ void MainWindow::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (int i = 0; i < objects -> size(); i++) {
-        qDebug("aa");
         objects -> at(i) -> draw();
+        objects -> at(i) -> update();
     }
 
 

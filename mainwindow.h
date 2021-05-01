@@ -7,6 +7,7 @@
 #include <QOpenGLFunctions>
 #include <QtOpenGL>
 #include <QDebug>
+#include <QKeyEvent>
 #include <vector>
 
 // To make things simpler, I'm using glu to generate our perspective matrix
@@ -57,7 +58,7 @@ private:
 
 
     float lastX, lastY; // keeps track of where the cursor is
-    float cam_x, cam_y, cam_z, cam_x_r, cam_y_r, cam_z_r; // The position of the camera
+    float cam_x=0, cam_y=0, cam_z=0, cam_x_r=0, cam_y_r=0, cam_z_r=0; // The position of the camera
     std::vector<GObject*> *objects;
 };
 
