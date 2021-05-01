@@ -30,7 +30,7 @@ public:
 
     float x, y, z;
 
-    static float *cam_x, *cam_y, *cam_z, *cam_x_r, *cam_y_r, *cam_z_r; // This gets defined during initialization of mainWindow
+    inline static float *cam_x=0, *cam_y=0, *cam_z=0, *cam_x_r=0, *cam_y_r=0, *cam_z_r=0; // This gets defined during initialization of mainWindow
 };
 
 #endif // GOBJECT_H

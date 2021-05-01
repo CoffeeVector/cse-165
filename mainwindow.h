@@ -6,6 +6,7 @@
 #include <QSurfaceFormat>
 #include <QOpenGLFunctions>
 #include <QtOpenGL>
+#include <QDebug>
 #include <vector>
 
 // To make things simpler, I'm using glu to generate our perspective matrix
@@ -15,7 +16,7 @@
 
 #include "GObject.h"
 #include "ExampleGround.h"
-
+#include "ExampleBrick.h"
 
 ///
 /// This class is basically what we draw things on. Based on how main is setup, it seems like this class is also what drives everything
@@ -53,7 +54,7 @@ private:
     // For right now, I will set up an abstract "GObject" Class that we can use for all of the tetris pieces, and any other scenery (ground, etc.) that we want / need
     // TODO: that ^
     // Vector<GObject*> gameObjects // Is called every update to draw vertices. Depending on how you want to implement the game we might want to do this differently, but for now I will go with this.
-    // If you guys want to
+
 
     float lastX, lastY; // keeps track of where the cursor is
     float cam_x, cam_y, cam_z, cam_x_r, cam_y_r, cam_z_r; // The position of the camera

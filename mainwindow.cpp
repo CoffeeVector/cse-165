@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
     context->create();
     context->makeCurrent(this);
 
+
+
     // Not entirely sure what this does, besides setting up a timer. Might be important for refresh rate, which seemed to be done manually.
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()),this, SLOT(UpdateAnimation()));
@@ -25,9 +27,9 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
     GObject::window = this;
 
     // Instead of sending the camera location to the objects everytime, I just set up some static pointers that get us the same thing
-    GObject::cam_x = &cam_x;
-    GObject::cam_y = &cam_y;
-    GObject::cam_z = &cam_z;
+    GObject::cam_x = &cam_x;     // This could probably be simplified,
+    GObject::cam_y = &cam_y;     // but for now I am going to focus on
+    GObject::cam_z = &cam_z;     // getting the critical functions working
     GObject::cam_x_r = &cam_x_r;
     GObject::cam_y_r = &cam_y_r;
     GObject::cam_z_r = &cam_z_r;
@@ -35,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
 
     objects = new std::vector<GObject*>();
     objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
+
 }
 
 
@@ -68,9 +71,9 @@ void MainWindow::resizeGL(int w, int h) {
     // Sets up a perspective projection matrix
     float fov = 1.39f; // Field of View
     float tanfov = tanf(fov/2);
-    float aspect = ((float)w)/h;
-    float zFar = 1000.0f;
-    float zNear = 0.01f;
+    float aspect = ((float)w)/h; // Aspect ratio
+    float zFar = 1000.0f; // Far clipping plane
+    float zNear = 0.01f;  // Near clipping plane
     float mat[16] = {1/(aspect*tanfov),0.0f,0.0f,0.0f,
                      0.0f,(1/tanfov),0.0f,0.0f,
                      0.0f,0.0f,-((zFar + zNear)/(zFar-zNear)),-1.0f,
@@ -90,6 +93,7 @@ void MainWindow::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (int i = 0; i < objects -> size(); i++) {
+        qDebug("aa");
         objects -> at(i) -> draw();
     }
 
