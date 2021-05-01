@@ -97,14 +97,36 @@ void MainWindow::paintGL() {
         objects -> at(i) -> draw();
         objects -> at(i) -> update();
     }
+    if (key_w) {
+        qDebug("w");
+    }
+    if (key_a) {
+        qDebug("a");
+    }
+}
 
-
-
-
-
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    // If you need to check more keys, add them here
+    if (event->key() == Qt::Key_W) {
+        key_w = true;
+    }
+    if (event->key() == Qt::Key_A) {
+        key_a = true;
+    }
 
 }
 
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event) {
+    // If you need to check more keys, also add them here
+    if (event->key() == Qt::Key_W){
+        key_w = false;
+    }
+    if (event->key() == Qt::Key_A){
+        key_a = false;
+    }
+
+}
 
 void MainWindow::UpdateAnimation() {
     this->update();

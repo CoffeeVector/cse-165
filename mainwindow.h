@@ -39,11 +39,12 @@ protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 
-//    void keyPressEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *); // logs which keys are pressed
+    void keyReleaseEvent(QKeyEvent *); // logs which keys are released
 
-//    void mousePressEvent(QMouseEvent *);
+    //void mousePressEvent(QMouseEvent *);
 
-//    void mouseMoveEvent(QMouseEvent *);
+    //void mouseMoveEvent(QMouseEvent *);
 public slots:
 
     void UpdateAnimation();
@@ -58,7 +59,11 @@ private:
 
 
     float lastX, lastY; // keeps track of where the cursor is
+
     float cam_x=0, cam_y=0, cam_z=0, cam_x_r=0, cam_y_r=0, cam_z_r=0; // The position of the camera
+
+    bool key_w=0, key_s=0, key_a=0,key_d=0; // keeps track of which keys are pressed
+
     std::vector<GObject*> *objects;
 };
 
