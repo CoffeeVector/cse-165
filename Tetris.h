@@ -15,7 +15,7 @@ struct Block {
 
 enum GameState {
     PLAYING, LOSS
-}
+};
 
 class Tetris {
     public:
@@ -72,7 +72,7 @@ class Tetris {
         }
     }
 
-    void spawn_piece() {
+    GameState spawn_piece() {
         int r = 255, g = 0, b = 0;
 
         // Generalization of
@@ -103,6 +103,7 @@ class Tetris {
         for (auto coord: coords) {
             state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] = new Block{r, g, b, true};
         }
+        return PLAYING;
     }
 
     GameState advance() {

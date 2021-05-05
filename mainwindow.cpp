@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t() {
 
     QTimer *gamelogic_timer = new QTimer(this);
     connect(gamelogic_timer, SIGNAL(timeout()),this, SLOT(GameAdvance()));
-    gamelogic_timer->start(2000);
+    gamelogic_timer->start(1000);
 
     //GObject::context = context;
     //GObject::window = this;

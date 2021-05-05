@@ -16,10 +16,6 @@
 // I understand that glu has caused some issues in the past, but right now this is easiser.
 // if this causes anyone any issues, or if you have to edit the .pro at all to get this to work, let me know and I will do this manually
 #include <GL/glu.h>
-
-#include "GObject.h"
-#include "ExampleGround.h"
-#include "ExampleBrick.h"
 #include "Tetris.h"
 
 ///
