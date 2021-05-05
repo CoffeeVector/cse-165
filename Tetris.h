@@ -1,5 +1,7 @@
 // I pretty much winged this whole thing, so expect lots of bugs. -KZ
 
+#include <iostream>
+
 enum Moves {
     UP, DOWN, LEFT, RIGHT, PITCH, ROLL, YAW
 };
@@ -14,7 +16,7 @@ class Tetris {
     Block**** state; // state[x][y][z], where z is the falling direction. x and y is arbitrary.
     int w, l, h;
 
-    Tetris(int w, int l, int h) {
+    Tetris(int w = 4, int l = 4, int h = 10) {
         this->w = w;
         this->l = l;
         this->h = h;
