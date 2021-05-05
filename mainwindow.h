@@ -49,8 +49,8 @@ protected:
 
     void mouseMoveEvent(QMouseEvent *);
 public slots:
-
     void UpdateAnimation();
+    void GameAdvance();
 
 private:
     QOpenGLContext *context;
@@ -65,9 +65,8 @@ private:
 
     float cam_x=0, cam_y=0, cam_z=0, cam_x_r=0, cam_y_r=0, cam_z_r=0; // The position of the camera
 
-    bool key_w=0, key_s=0, key_a=0,key_d=0; // keeps track of which keys are pressed
-
-    std::vector<GObject*> *objects;
+    bool key_w=0,  key_a=0,    key_s=0,    key_d=0; // keeps track of which keys are pressed
+    bool key_up=0, key_down=0, key_left=0, key_right=0; // keeps track of which keys are pressed
 
     QCursor cursor;
     Tetris t;

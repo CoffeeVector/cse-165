@@ -26,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t() {
     connect(timer, SIGNAL(timeout()),this, SLOT(UpdateAnimation()));
     timer->start(20);
 
+    QTimer *gamelogic_timer = new QTimer(this);
+    connect(gamelogic_timer, SIGNAL(timeout()),this, SLOT(GameAdvance()));
+    gamelogic_timer->start(2000);
+
     //GObject::context = context;
     //GObject::window = this;
 
@@ -37,24 +41,12 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t() {
     //GObject::cam_y_r = &cam_y_r;
     //GObject::cam_z_r = &cam_z_r;
 
-
-//    objects = new std::vector<GObject*>();
-//    objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
-//    objects -> push_back(new ExampleBrick(0.0f, 9.0f, -9.0f, (ExampleGround*)objects->front()));
-//
     t.spawn_piece();
 
 }
 
 
 MainWindow::~MainWindow() {
-    // Frees the memory from this
-    //while (objects->size() != 0) {
-    //    free(objects->back());
-    //    objects->pop_back();
-    //}
-
-
     //delete context; // For some reason the context wasn't being deleted before.
 }
 
@@ -82,11 +74,12 @@ void MainWindow::resizeGL(int w, int h) {
      * bottom, top: Specify the coordinates for the bottom and top horizontal clipping planes.
      * nearVal, farVal: Specify the distances to the near and far depth clipping planes. Both distances must be positive.
      */
-    glFrustum(-2, +2, -2, +2, 4.0, 10.0);
+    glFrustum(-10, +10, -10, +10, 20.0, 100.0);
 
     //initialize modelview matrix
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glTranslatef(0.0, 0.0, -17.0);
 
     lastX = w/2;
     lastY = h/2;
@@ -100,26 +93,68 @@ void MainWindow::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glTranslatef(0.0, 0.0, -17.0);
+    glTranslatef(0.0, 0.0, -35.0);
     glRotatef(cam_x_r, 1.0, 0.0, 0.0);
     glRotatef(cam_y_r, 0.0, 1.0, 0.0);
     glRotatef(cam_z_r, 0.0, 0.0, 1.0);
 
     int x, y, z;
     float r, g, b;
-    float block_width = 1;
+    float block_width = 0.9;
+    //float color_width = 0.9;
     for (int i = 0; i < t.w*t.l*t.h; i++) {
         t.ind2sub(i, x, y, z);
         if (t.state[x][y][z] != NULL) {
             r = ((float) t.state[x][y][z]->r) / 255;
             g = ((float) t.state[x][y][z]->g) / 255;
             b = ((float) t.state[x][y][z]->b) / 255;
+            int num_corners = 4*6;
+            int cube_coords[num_corners][3] = {
+                //bottom
+                {0, 0, 0},
+                {1, 0, 0},
+                {1, 1, 0},
+                {0, 1, 0},
+                //top
+                {0, 0, 1},
+                {1, 0, 1},
+                {1, 1, 1},
+                {0, 1, 1},
+                //front
+                {0, 0, 0},
+                {0, 1, 0},
+                {0, 1, 1},
+                {0, 0, 1},
+                //back
+                {1, 0, 0},
+                {1, 1, 0},
+                {1, 1, 1},
+                {1, 0, 1},
+                //left
+                {0, 0, 0},
+                {0, 0, 1},
+                {1, 0, 1},
+                {1, 0, 0},
+                //right
+                {0, 1, 0},
+                {0, 1, 1},
+                {1, 1, 1},
+                {1, 1, 0},
+            };
             glBegin(GL_QUADS); // bottom
                 glColor3f(r, g, b);
-                glVertex3f(block_width*x, block_width*y, block_width*z);
-                glVertex3f(block_width*(x+1), block_width*y, block_width*z);
-                glVertex3f(block_width*x, block_width*(y+1), block_width*z);
-                glVertex3f(block_width*(x+1), block_width*(y+1), block_width*z);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                for (int corner = 0; corner < num_corners; corner++) {
+                    glVertex3f(
+                        block_width*(x + cube_coords[corner][0]),
+                        block_width*(y + cube_coords[corner][1]),
+                        block_width*(z + cube_coords[corner][2])
+                    );
+                    if (corner % 4 == 0 && corner != 0) { // start new QUAD
+                        glEnd();
+                        glBegin(GL_QUADS);
+                    }
+                }
             glEnd();
         }
     }
@@ -141,6 +176,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_A) {
         key_a = true;
     }
+    if (event->key() == Qt::Key_A) {
+        key_s = true;
+    }
+    if (event->key() == Qt::Key_A) {
+        key_d = true;
+    }
     if (event->key() == Qt::Key_Escape) {
         qApp->exit();
     }
@@ -155,7 +196,6 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_A){
         key_a = false;
     }
-
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
@@ -181,6 +221,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 
 void MainWindow::UpdateAnimation() {
     this->update();
+}
+
+void MainWindow::GameAdvance() {
+    t.advance();
 }
 
 void MainWindow::paintEvent(QPaintEvent *event) {
