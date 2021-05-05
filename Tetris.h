@@ -13,6 +13,10 @@ struct Block {
     bool falling;
 };
 
+enum GameState {
+    PLAYING, LOSS
+}
+
 class Tetris {
     public:
     Block**** state; // state[x][y][z], where z is the falling direction. x and y is arbitrary.
@@ -91,8 +95,8 @@ class Tetris {
 
         int o[] = {1, 1, 9}; // origin
         for (auto coord: coords) {
-            if (state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]]) { // if not null, end the game, you lose.
-
+            if (state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] != NULL) { // if not null, end the game, you lose.
+                return LOSS;
             }
         }
 
@@ -101,7 +105,7 @@ class Tetris {
         }
     }
 
-    void advance() {
+    GameState advance() {
         // makes the natural advancement in the game state (falling blocks and tetris)
         int x, y, z;
 
@@ -125,6 +129,8 @@ class Tetris {
             }
 
             // TODO: begin new shape. should be a new function.
+            GameState g = spawn_piece();
+            return g;
         } else {
             // move all the falling shapes down by one
             for (int i = 0; i < w*l*h; i++) {
@@ -137,6 +143,7 @@ class Tetris {
                     // linear indexing should do.
                 }
             }
+            return PLAYING;
         }
     }
 
