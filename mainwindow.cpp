@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 
-MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
+MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t() {
 
     setSurfaceType(QWindow::OpenGLSurface);
 
@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow() {
     objects = new std::vector<GObject*>();
     objects -> push_back(new ExampleGround(0.0f, -1.0f, 0.0f));
     objects -> push_back(new ExampleBrick(0.0f, 9.0f, -9.0f, (ExampleGround*)objects->front()));
+
+    t.spawn_piece();
 
 }
 
@@ -101,10 +103,31 @@ void MainWindow::paintGL() {
     glClearColor(0.5f,0.5f,0.5f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (int i = 0; i < objects -> size(); i++) {
-        objects -> at(i) -> draw();
-        objects -> at(i) -> update();
+    //for (uint i = 0; i < objects -> size(); i++) {
+    //    objects -> at(i) -> draw();
+    //    objects -> at(i) -> update();
+    //}
+
+    int x, y, z;
+    float r, g, b;
+    float block_width = 1;
+    glBegin(GL_QUADS); // Bottom
+    for (int i = 0; i < t.w*t.l*t.h; i++) {
+        t.ind2sub(i, x, y, z);
+        if (t.state[x][y][z] != NULL) {
+            r = ((float) t.state[x][y][z]->r) / 255;
+            g = ((float) t.state[x][y][z]->g) / 255;
+            b = ((float) t.state[x][y][z]->b) / 255;
+            glColor3f(r, g, b);
+            glVertex3f(block_width*x, block_width*y, block_width*z);
+            glVertex3f(block_width*(x+1), block_width*y, block_width*z);
+            glVertex3f(block_width*x, block_width*(y+1), block_width*z);
+            glVertex3f(block_width*(x+1), block_width*(y+1), block_width*z);
+        }
     }
+    glEnd();
+    glFlush();
+
     if (key_w) {
         qDebug("w");
     }
@@ -155,6 +178,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
     cam_x_r += deltaY * sensitivity;
 
     cursor.setPos(this->x() + lastX,this->y() + lastY);
+    printf("%f %f", this->x() + lastX, this->y() + lastY);
 
 }
 

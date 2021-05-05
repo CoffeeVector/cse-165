@@ -19,7 +19,8 @@ SOURCES += main.cpp \
 HEADERS  += mainwindow.h \
 	ExampleBrick.h \
 	ExampleGround.h \
-	GObject.h
+        GObject.h \
+        Tetris.h
 
 
 # Default rules for deployment.

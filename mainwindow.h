@@ -20,6 +20,7 @@
 #include "GObject.h"
 #include "ExampleGround.h"
 #include "ExampleBrick.h"
+#include "Tetris.h"
 
 ///
 /// This class is basically what we draw things on. Based on how main is setup, it seems like this class is also what drives everything
@@ -69,6 +70,7 @@ private:
     std::vector<GObject*> *objects;
 
     QCursor cursor;
+    Tetris t;
 };
 
 

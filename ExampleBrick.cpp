@@ -17,6 +17,7 @@ void ExampleBrick::draw() {
     // This should not be changed, as this positions the object
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glEnable(GL_DEPTH_TEST);
 
     // Positions the camera
     glRotatef(*cam_x_r, 1.0f,0.0f,0.0f);
@@ -26,47 +27,38 @@ void ExampleBrick::draw() {
     glTranslatef(*cam_x,*cam_y,*cam_z);
 
     // Your code should go here.
-    glBegin(GL_POLYGON); // Bottom
+    glBegin(GL_QUADS); // Bottom
         glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, -0.5f, 0.5f);
         glVertex3f(0.5f, -0.5f, -0.5f);
         glVertex3f(-0.5f, -0.5f, -0.5f);
         glVertex3f(-0.5f, -0.5f, 0.5f);
-    glEnd();
 
-    glBegin(GL_POLYGON); // Top
+        // Top
         glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, 0.5f, 0.5f);
         glVertex3f(0.5f, 0.5f, -0.5f);
         glVertex3f(-0.5f, 0.5f, -0.5f);
         glVertex3f(-0.5f, 0.5f, 0.5f);
-    glEnd();
-
-    glBegin(GL_POLYGON); // Front
+        // Front
         glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, 0.5f, 0.5f);
         glVertex3f(0.5f, -0.5f, 0.5f);
         glVertex3f(-0.5f, -0.5f, 0.5f);
         glVertex3f(-0.5f, 0.5f, 0.5f);
-    glEnd();
-
-    glBegin(GL_POLYGON); // Back
+        // Back
         glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, 0.5f, -0.5f);
         glVertex3f(0.5f, -0.5f, -0.5f);
         glVertex3f(-0.5f, -0.5f, -0.5f);
         glVertex3f(-0.5f, 0.5f, -0.5f);
-    glEnd();
-
-    glBegin(GL_POLYGON); // Left
+        // Left
         glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(0.5f, 0.5f, 0.5f);
         glVertex3f(0.5f, -0.5f, 0.5f);
         glVertex3f(0.5f, -0.5f, -0.5f);
         glVertex3f(0.5f, 0.5f, -0.5f);
-    glEnd();
-
-    glBegin(GL_POLYGON); // Right
+        // Right
         glColor3f(0.9f, 0.2f, 0.2f);
         glVertex3f(-0.5f, 0.5f, 0.5f);
         glVertex3f(-0.5f, -0.5f, 0.5f);
