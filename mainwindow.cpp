@@ -215,8 +215,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
     cam_x_r += deltaY * sensitivity;
 
     cursor.setPos(this->x() + lastX,this->y() + lastY);
-    printf("%f %f\n", this->x() + lastX, this->y() + lastY);
-
 }
 
 void MainWindow::UpdateAnimation() {
