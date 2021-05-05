@@ -44,6 +44,7 @@ protected:
     void mousePressEvent(QMouseEvent *);
 
     void mouseMoveEvent(QMouseEvent *);
+    void lose();
 public slots:
     void UpdateAnimation();
     void GameAdvance();

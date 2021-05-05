@@ -160,11 +160,10 @@ void MainWindow::paintGL() {
     }
     glFlush();
 
-    if (key_w) {
-        qDebug("w");
-    }
-    if (key_a) {
-        qDebug("a");
+    if (key_s) {
+        if (t.control(DOWN) == LOSS) {
+            lose();
+        }
     }
 }
 
@@ -176,10 +175,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_A) {
         key_a = true;
     }
-    if (event->key() == Qt::Key_A) {
+    if (event->key() == Qt::Key_S) {
         key_s = true;
     }
-    if (event->key() == Qt::Key_A) {
+    if (event->key() == Qt::Key_D) {
         key_d = true;
     }
     if (event->key() == Qt::Key_Escape) {
@@ -190,11 +189,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     // If you need to check more keys, also add them here
-    if (event->key() == Qt::Key_W){
+    if (event->key() == Qt::Key_W) {
         key_w = false;
     }
-    if (event->key() == Qt::Key_A){
+    if (event->key() == Qt::Key_A) {
         key_a = false;
+    }
+    if (event->key() == Qt::Key_S) {
+        key_s = false;
+    }
+    if (event->key() == Qt::Key_D) {
+        key_d = false;
     }
 }
 
@@ -222,7 +227,9 @@ void MainWindow::UpdateAnimation() {
 }
 
 void MainWindow::GameAdvance() {
-    t.advance();
+    if (t.advance() == LOSS) {
+        lose();
+    }
 }
 
 void MainWindow::paintEvent(QPaintEvent *event) {
@@ -233,4 +240,8 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 void MainWindow::resizeEvent(QResizeEvent *event) {
     resizeGL(this->width(),this->height());
     this->update();
+}
+
+void MainWindow::lose() {
+    qApp->exit(); // replace this with a loss screen
 }

@@ -51,13 +51,15 @@ class Tetris {
         z = ind / (w*l);
     }
 
-    void control(Moves move) {
+    GameState control(Moves move) {
         // move is a character representing a game move wasd, arrow keys, and spacebar
         // TODO fill in actual motion.
+        int x, y, z;
         switch (move) {
             case UP:
                 break;
             case DOWN:
+                return advance();
                 break;
             case LEFT:
                 break;
