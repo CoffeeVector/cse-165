@@ -61,7 +61,7 @@ private:
     // Vector<GObject*> gameObjects // Is called every update to draw vertices. Depending on how you want to implement the game we might want to do this differently, but for now I will go with this.
 
 
-    float lastX, lastY; // keeps track of where the cursor is
+    float lastX=0, lastY=0; // keeps track of where the cursor is
 
     float cam_x=0, cam_y=0, cam_z=0, cam_x_r=0, cam_y_r=0, cam_z_r=0; // The position of the camera
 
