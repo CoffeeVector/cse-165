@@ -5,7 +5,7 @@
 #include <iostream>
 
 enum Moves {
-    UP, DOWN, LEFT, RIGHT, PITCH, ROLL, YAW
+    DOWN, LEFT, RIGHT, FORWARD, BACK, PITCH, ROLL, YAW
 };
 
 struct Block {
@@ -56,22 +56,109 @@ class Tetris {
         // TODO fill in actual motion.
         int x, y, z;
         switch (move) {
-            case UP:
-                break;
             case DOWN:
-                return advance();
-                break;
             case LEFT:
-                break;
             case RIGHT:
+            case FORWARD:
+            case BACK:
+                translate_piece(move);
                 break;
             case PITCH:
-                break;
             case ROLL:
-                break;
             case YAW:
+                rotate_piece(move);
                 break;
         }
+    }
+
+    GameState translate_piece(Moves move) {
+        // check valid
+        int x, y, z;
+        bool valid_move = true;
+        for (int i = 0; i < w*l*h; i++) {
+            ind2sub(i, x, y, z);
+            bool condition = state[x][y][z] && state[x][y][z]->falling;
+            switch (move) {
+                case DOWN:
+                    // the block must be falling and below can either be the ground, or another block which is not falling.
+                    condition = condition && (z == 0   || (state[x  ][y  ][z-1] && !state[x  ][y  ][z-1]->falling));
+                    break;
+                case LEFT:
+                    condition = condition && (x == 0   || (state[x-1][y  ][z  ] && !state[x-1][y  ][z  ]->falling));
+                    break;
+                case RIGHT:
+                    condition = condition && (x == w-1 || (state[x+1][y  ][z  ] && !state[x+1][y  ][z  ]->falling));
+                    break;
+                case BACK:
+                    condition = condition && (y == 0   || (state[x  ][y-1][z  ] && !state[x  ][y-1][z  ]->falling));
+                    break;
+                case FORWARD:
+                    condition = condition && (y == l-1 || (state[x  ][y+1][z  ] && !state[x  ][y+1][z  ]->falling));
+                    break;
+            }
+            if (condition) {
+                valid_move = false;
+                break;
+            }
+        }
+
+        GameState g = PLAYING; // be default, translate piece is fine
+        if (!valid_move && move == DOWN) { // in this special case, we have to freeze the piece and spawn a new one
+            for (int i = 0; i < w*l*h; i++) {
+                ind2sub(i, x, y, z);
+                if (state[x][y][z] && state[x][y][z]->falling) {
+                    state[x][y][z]->falling = false;
+                }
+            }
+            g = spawn_piece(); // unless if we can't spawn the piece.
+        }
+
+        // move piece
+        int i, i_ex;
+        bool up;
+        switch(move) {
+            case DOWN:
+            case LEFT:
+            case BACK:
+                i = 0;
+                i_ex = w*l*h;
+                up = true;
+                break;
+            case RIGHT:
+            case FORWARD:
+                i = w*l*h;
+                i_ex = 0;
+                up = false;
+                break;
+        }
+        for (; up ? i < i_ex : i >= i_ex; up ? i++ : i--) {
+            ind2sub(i, x, y, z);
+            if (state[x][y][z] && state[x][y][z]->falling) {
+                switch(move) {
+                    case DOWN:
+                        state[x  ][y  ][z-1] = state[x][y][z];
+                        break;
+                    case LEFT:
+                        state[x-1][y  ][z  ] = state[x][y][z];
+                        break;
+                    case RIGHT:
+                        state[x+1][y  ][z  ] = state[x][y][z];
+                        break;
+                    case FORWARD:
+                        state[x  ][y+1][z  ] = state[x][y][z];
+                        break;
+                    case BACK:
+                        state[x  ][y-1][z  ] = state[x][y][z];
+                        break;
+                }
+                state[x][y][z] = NULL;
+            }
+        }
+        return g;
+    }
+
+
+    void rotate_piece(Moves m) {
     }
 
     GameState spawn_piece() {
@@ -108,10 +195,8 @@ class Tetris {
         return PLAYING;
     }
 
-    GameState advance() {
-        // makes the natural advancement in the game state (falling blocks and tetris)
+    bool freeze_landed() {
         int x, y, z;
-
         bool landed = false; // as in, as the shape "landed" and touched the ground
         for (int i = 0; i < w*l*h; i++) {
             ind2sub(i, x, y, z);
@@ -121,33 +206,19 @@ class Tetris {
                 break;
             }
         }
-
         if (landed) {
-            // freeze the blocks, and begin a new shape
             for (int i = 0; i < w*l*h; i++) {
                 ind2sub(i, x, y, z);
                 if (state[x][y][z] && state[x][y][z]->falling) {
                     state[x][y][z]->falling = false;
                 }
             }
-
-            // TODO: begin new shape. should be a new function.
-            GameState g = spawn_piece();
-            return g;
-        } else {
-            // move all the falling shapes down by one
-            for (int i = 0; i < w*l*h; i++) {
-                ind2sub(i, x, y, z);
-                if (state[x][y][z] && state[x][y][z]->falling) {
-                    state[x][y][z-1] = state[x][y][z];
-                    state[x][y][z] = NULL;
-                    // this should not introduce complications so long that
-                    // we are computing this from z = 0 to z = l, which the
-                    // linear indexing should do.
-                }
-            }
-            return PLAYING;
         }
+        return landed;
+    }
+
+    GameState advance() {
+        return translate_piece(DOWN);
     }
 
     void print() {

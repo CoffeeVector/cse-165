@@ -168,6 +168,7 @@ void MainWindow::paintGL() {
         if (t.control(DOWN) == LOSS) {
             lose();
         }
+        key_s = false; // don't do again unless repressed
     }
 }
 
