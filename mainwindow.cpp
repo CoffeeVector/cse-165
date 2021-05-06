@@ -141,21 +141,25 @@ void MainWindow::paintGL() {
                 {1, 1, 1},
                 {1, 1, 0},
             };
-            glBegin(GL_QUADS); // bottom
-                glColor3f(r, g, b);
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                for (int corner = 0; corner < num_corners; corner++) {
-                    glVertex3f(
-                        block_width*(x + cube_coords[corner][0]),
-                        block_width*(y + cube_coords[corner][1]),
-                        block_width*(z + cube_coords[corner][2])
-                    );
-                    if (corner % 4 == 0 && corner != 0) { // start new QUAD
-                        glEnd();
-                        glBegin(GL_QUADS);
+
+            int mode[] = {GL_FILL, GL_LINE};
+            for (int i = 0; i < 2; i++) { // draw twice, once with borders, and another wth fill
+                glPolygonMode(GL_FRONT_AND_BACK, mode[i]);
+                glBegin(GL_QUADS); // bottom
+                    if (i == 0) {
+                        glColor3f(r, g, b);
+                    } else {
+                        glColor3f(0, 0, 0);
                     }
-                }
-            glEnd();
+                    for (int corner = 0; corner < num_corners; corner++) {
+                        glVertex3f(
+                            block_width*(x + cube_coords[corner][0]),
+                            block_width*(y + cube_coords[corner][1]),
+                            block_width*(z + cube_coords[corner][2])
+                        );
+                    }
+                glEnd();
+            }
         }
     }
     glFlush();
