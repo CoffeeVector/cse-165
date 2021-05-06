@@ -141,29 +141,50 @@ void MainWindow::paintGL() {
                 {1, 1, 1},
                 {1, 1, 0},
             };
-            glBegin(GL_QUADS); // bottom
-                glColor3f(r, g, b);
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                for (int corner = 0; corner < num_corners; corner++) {
-                    glVertex3f(
-                        block_width*(x + cube_coords[corner][0]),
-                        block_width*(y + cube_coords[corner][1]),
-                        block_width*(z + cube_coords[corner][2])
-                    );
-                    if (corner % 4 == 0 && corner != 0) { // start new QUAD
-                        glEnd();
-                        glBegin(GL_QUADS);
+
+            int mode[] = {GL_FILL, GL_LINE};
+            for (int i = 0; i < 2; i++) { // draw twice, once with borders, and another wth fill
+                glPolygonMode(GL_FRONT_AND_BACK, mode[i]);
+                glBegin(GL_QUADS); // bottom
+                    if (i == 0) {
+                        glColor3f(r, g, b);
+                    } else {
+                        glColor3f(0, 0, 0);
                     }
-                }
-            glEnd();
+                    for (int corner = 0; corner < num_corners; corner++) {
+                        glVertex3f(
+                            block_width*(x + cube_coords[corner][0]),
+                            block_width*(y + cube_coords[corner][1]),
+                            block_width*(z + cube_coords[corner][2])
+                        );
+                    }
+                glEnd();
+            }
         }
     }
     glFlush();
 
+    if (key_w) {
+        t.control(FORWARD);
+        key_w = false; // don't do again unless repressed
+    }
     if (key_s) {
+        t.control(BACK);
+        key_s = false; // don't do again unless repressed
+    }
+    if (key_a) {
+        t.control(LEFT);
+        key_a = false;
+    }
+    if (key_d) {
+        t.control(RIGHT);
+        key_d = false;
+    }
+    if (key_down) {
         if (t.control(DOWN) == LOSS) {
             lose();
         }
+        key_down = false;
     }
 }
 
@@ -181,14 +202,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_D) {
         key_d = true;
     }
+    if (event->key() == Qt::Key_Up) {
+        key_up = true;
+    }
+    if (event->key() == Qt::Key_Down) {
+        key_down = true;
+    }
+    if (event->key() == Qt::Key_Left) {
+        key_left = true;
+    }
+    if (event->key() == Qt::Key_Right) {
+        key_right = true;
+    }
     if (event->key() == Qt::Key_Escape) {
         qApp->exit();
     }
-
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
-    // If you need to check more keys, also add them here
     if (event->key() == Qt::Key_W) {
         key_w = false;
     }
@@ -200,6 +231,18 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     }
     if (event->key() == Qt::Key_D) {
         key_d = false;
+    }
+    if (event->key() == Qt::Key_Up) {
+        key_up = false;
+    }
+    if (event->key() == Qt::Key_Down) {
+        key_down = false;
+    }
+    if (event->key() == Qt::Key_Left) {
+        key_left = false;
+    }
+    if (event->key() == Qt::Key_Right) {
+        key_right = false;
     }
 }
 
