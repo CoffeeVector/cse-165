@@ -193,7 +193,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 
     float sensitivity = 0.1;
 
-    cam_y_r += deltaX * sensitivity;
+    cam_z_r += deltaX * sensitivity;
     cam_x_r += deltaY * sensitivity;
 
     cursor.setPos(this->x() + lastX,this->y() + lastY);
