@@ -164,11 +164,27 @@ void MainWindow::paintGL() {
     }
     glFlush();
 
+    if (key_w) {
+        t.control(FORWARD);
+        key_w = false; // don't do again unless repressed
+    }
     if (key_s) {
+        t.control(BACK);
+        key_s = false; // don't do again unless repressed
+    }
+    if (key_a) {
+        t.control(LEFT);
+        key_a = false;
+    }
+    if (key_d) {
+        t.control(RIGHT);
+        key_d = false;
+    }
+    if (key_down) {
         if (t.control(DOWN) == LOSS) {
             lose();
         }
-        key_s = false; // don't do again unless repressed
+        key_down = false;
     }
 }
 
@@ -186,14 +202,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_D) {
         key_d = true;
     }
+    if (event->key() == Qt::Key_Up) {
+        key_up = true;
+    }
+    if (event->key() == Qt::Key_Down) {
+        key_down = true;
+    }
+    if (event->key() == Qt::Key_Left) {
+        key_left = true;
+    }
+    if (event->key() == Qt::Key_Right) {
+        key_right = true;
+    }
     if (event->key() == Qt::Key_Escape) {
         qApp->exit();
     }
-
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
-    // If you need to check more keys, also add them here
     if (event->key() == Qt::Key_W) {
         key_w = false;
     }
@@ -205,6 +231,18 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     }
     if (event->key() == Qt::Key_D) {
         key_d = false;
+    }
+    if (event->key() == Qt::Key_Up) {
+        key_up = false;
+    }
+    if (event->key() == Qt::Key_Down) {
+        key_down = false;
+    }
+    if (event->key() == Qt::Key_Left) {
+        key_left = false;
+    }
+    if (event->key() == Qt::Key_Right) {
+        key_right = false;
     }
 }
 

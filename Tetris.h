@@ -22,7 +22,7 @@ class Tetris {
     Block**** state; // state[x][y][z], where z is the falling direction. x and y is arbitrary.
     int w, l, h;
 
-    Tetris(int w = 4, int l = 4, int h = 10) {
+    Tetris(int w = 8, int l = 8, int h = 10) {
         this->w = w;
         this->l = l;
         this->h = h;
@@ -114,44 +114,46 @@ class Tetris {
         }
 
         // move piece
-        int i, i_ex;
-        bool up;
-        switch(move) {
-            case DOWN:
-            case LEFT:
-            case BACK:
-                i = 0;
-                i_ex = w*l*h;
-                up = true;
-                break;
-            case RIGHT:
-            case FORWARD:
-                i = w*l*h;
-                i_ex = 0;
-                up = false;
-                break;
-        }
-        for (; up ? i < i_ex : i >= i_ex; up ? i++ : i--) {
-            ind2sub(i, x, y, z);
-            if (state[x][y][z] && state[x][y][z]->falling) {
-                switch(move) {
-                    case DOWN:
-                        state[x  ][y  ][z-1] = state[x][y][z];
-                        break;
-                    case LEFT:
-                        state[x-1][y  ][z  ] = state[x][y][z];
-                        break;
-                    case RIGHT:
-                        state[x+1][y  ][z  ] = state[x][y][z];
-                        break;
-                    case FORWARD:
-                        state[x  ][y+1][z  ] = state[x][y][z];
-                        break;
-                    case BACK:
-                        state[x  ][y-1][z  ] = state[x][y][z];
-                        break;
+        if (valid_move) {
+            int i, i_ex;
+            bool up;
+            switch(move) {
+                case DOWN:
+                case LEFT:
+                case BACK:
+                    i = 0;
+                    i_ex = w*l*h;
+                    up = true;
+                    break;
+                case RIGHT:
+                case FORWARD:
+                    i = w*l*h;
+                    i_ex = 0;
+                    up = false;
+                    break;
+            }
+            for (; up ? i < i_ex : i >= i_ex; up ? i++ : i--) {
+                ind2sub(i, x, y, z);
+                if (state[x][y][z] && state[x][y][z]->falling) {
+                    switch(move) {
+                        case DOWN:
+                            state[x  ][y  ][z-1] = state[x][y][z];
+                            break;
+                        case LEFT:
+                            state[x-1][y  ][z  ] = state[x][y][z];
+                            break;
+                        case RIGHT:
+                            state[x+1][y  ][z  ] = state[x][y][z];
+                            break;
+                        case FORWARD:
+                            state[x  ][y+1][z  ] = state[x][y][z];
+                            break;
+                        case BACK:
+                            state[x  ][y-1][z  ] = state[x][y][z];
+                            break;
+                    }
+                    state[x][y][z] = NULL;
                 }
-                state[x][y][z] = NULL;
             }
         }
         return g;
@@ -193,28 +195,6 @@ class Tetris {
             state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] = new Block{r, g, b, true};
         }
         return PLAYING;
-    }
-
-    bool freeze_landed() {
-        int x, y, z;
-        bool landed = false; // as in, as the shape "landed" and touched the ground
-        for (int i = 0; i < w*l*h; i++) {
-            ind2sub(i, x, y, z);
-            if (state[x][y][z] && state[x][y][z]->falling && (z == 0 || (state[x][y][z-1] && !state[x][y][z-1]->falling))) {
-                // the block must be falling and below can either be the ground, or another block which is not falling.
-                landed = true;
-                break;
-            }
-        }
-        if (landed) {
-            for (int i = 0; i < w*l*h; i++) {
-                ind2sub(i, x, y, z);
-                if (state[x][y][z] && state[x][y][z]->falling) {
-                    state[x][y][z]->falling = false;
-                }
-            }
-        }
-        return landed;
     }
 
     GameState advance() {
