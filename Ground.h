@@ -15,17 +15,7 @@ public:
     Ground(Tetris *t) : x(0), y(0), z(0), w(t->w), l(t->l) {}
     ~Ground () {}
 
-    void draw (float cam_x, float cam_y, float cam_z, float cam_x_r, float cam_y_r, float cam_z_r, float bl_sz) {
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
-        // Positions the camera // Note: when the modelview matrix is broken into the model and view matrix, this isn't necessary
-        glTranslatef(x,y,z);
-        glTranslatef(cam_x,cam_y,cam_z);
-        glRotatef(cam_x_r, 1.0f,0.0f,0.0f);
-        glRotatef(cam_y_r, 0.0f,1.0f,0.0f);
-        glRotatef(cam_z_r, 0.0f,0.0f,1.0f);
-
+    void draw(float bl_sz)  {
         // Green background
         float border = 2.0f; // how much green space to have. Set to a large number for the entire background to be green
         glPolygonMode(GL_BACK, GL_FILL); // Change to GL_FRONT_AND_BACK if you want the other side to be filled as well
@@ -61,18 +51,6 @@ public:
                 glEnd();
             }
         }
-
-        glFlush();
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
     }
 };
-
-
-
-
-
-
-
-
-#endif // GROUND_H
+#endif

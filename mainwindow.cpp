@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 
-MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t(), g(&t) {
+MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t(), g(&t), tg(&t) {
 
     setSurfaceType(QWindow::OpenGLSurface);
 
@@ -29,17 +29,6 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t(), g(&t) {
     QTimer *gamelogic_timer = new QTimer(this);
     connect(gamelogic_timer, SIGNAL(timeout()),this, SLOT(GameAdvance()));
     gamelogic_timer->start(1000);
-
-    //GObject::context = context;
-    //GObject::window = this;
-
-    //// Instead of sending the camera location to the objects everytime, I just set up some static pointers that get us the same thing
-    //GObject::cam_x = &cam_x;     // This could probably be simplified,
-    //GObject::cam_y = &cam_y;     // but for now I am going to focus on
-    //GObject::cam_z = &cam_z;     // getting the critical functions working
-    //Ground::cam_x_r = &cam_x_r;
-    //Ground::cam_y_r = &cam_y_r;
-    //Ground::cam_z_r = &cam_z_r;
 
     t.spawn_piece();
 
@@ -93,77 +82,14 @@ void MainWindow::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    g.draw(0,0,-35,cam_x_r,cam_y_r,cam_z_r, 0.9f);
 
     glTranslatef(0.0, 0.0, -35.0);
     glRotatef(cam_x_r, 1.0, 0.0, 0.0);
     glRotatef(cam_y_r, 0.0, 1.0, 0.0);
     glRotatef(cam_z_r, 0.0, 0.0, 1.0);
 
-    int x, y, z;
-    float r, g, b;
-    float block_width = 0.9;
-    //float color_width = 0.9;
-    for (int i = 0; i < t.w*t.l*t.h; i++) {
-        t.ind2sub(i, x, y, z);
-        if (t.state[x][y][z] != NULL) {
-            r = ((float) t.state[x][y][z]->r) / 255;
-            g = ((float) t.state[x][y][z]->g) / 255;
-            b = ((float) t.state[x][y][z]->b) / 255;
-            int num_corners = 4*6;
-            int cube_coords[num_corners][3] = {
-                //bottom
-                {0, 0, 0},
-                {1, 0, 0},
-                {1, 1, 0},
-                {0, 1, 0},
-                //top
-                {0, 0, 1},
-                {1, 0, 1},
-                {1, 1, 1},
-                {0, 1, 1},
-                //front
-                {0, 0, 0},
-                {0, 1, 0},
-                {0, 1, 1},
-                {0, 0, 1},
-                //back
-                {1, 0, 0},
-                {1, 1, 0},
-                {1, 1, 1},
-                {1, 0, 1},
-                //left
-                {0, 0, 0},
-                {0, 0, 1},
-                {1, 0, 1},
-                {1, 0, 0},
-                //right
-                {0, 1, 0},
-                {0, 1, 1},
-                {1, 1, 1},
-                {1, 1, 0},
-            };
-
-            int mode[] = {GL_FILL, GL_LINE};
-            for (int i = 0; i < 2; i++) { // draw twice, once with borders, and another wth fill
-                glPolygonMode(GL_FRONT_AND_BACK, mode[i]);
-                glBegin(GL_QUADS); // bottom
-                    if (i == 0) {
-                        glColor3f(r, g, b);
-                    } else {
-                        glColor3f(0, 0, 0);
-                    }
-                    for (int corner = 0; corner < num_corners; corner++) {
-                        glVertex3f(
-                            block_width*(x + cube_coords[corner][0]),
-                            block_width*(y + cube_coords[corner][1]),
-                            block_width*(z + cube_coords[corner][2])
-                        );
-                    }
-                glEnd();
-            }
-        }
-    }
+    g.draw(0.9f);
+    tg.draw();
     glFlush();
 
     if (key_w) {
