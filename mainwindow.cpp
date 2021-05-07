@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 
-MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t() {
+MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t(), g(&t) {
 
     setSurfaceType(QWindow::OpenGLSurface);
 
@@ -37,9 +37,9 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t() {
     //GObject::cam_x = &cam_x;     // This could probably be simplified,
     //GObject::cam_y = &cam_y;     // but for now I am going to focus on
     //GObject::cam_z = &cam_z;     // getting the critical functions working
-    //GObject::cam_x_r = &cam_x_r;
-    //GObject::cam_y_r = &cam_y_r;
-    //GObject::cam_z_r = &cam_z_r;
+    //Ground::cam_x_r = &cam_x_r;
+    //Ground::cam_y_r = &cam_y_r;
+    //Ground::cam_z_r = &cam_z_r;
 
     t.spawn_piece();
 
@@ -92,6 +92,8 @@ void MainWindow::paintGL() {
     glClearColor(0.5f,0.5f,0.5f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+
+    g.draw(0,0,-35,cam_x_r,cam_y_r,cam_z_r, 0.9f);
 
     glTranslatef(0.0, 0.0, -35.0);
     glRotatef(cam_x_r, 1.0, 0.0, 0.0);

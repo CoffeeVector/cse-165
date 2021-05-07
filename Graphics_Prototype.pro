@@ -13,6 +13,7 @@ SOURCES += main.cpp \
 	mainwindow.cpp \
 
 HEADERS  += mainwindow.h \
+        Ground.h \
         Tetris.h
 
 # Default rules for deployment.
