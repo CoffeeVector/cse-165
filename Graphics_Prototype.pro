@@ -1,4 +1,5 @@
 QT += core gui opengl widgets
+LIBS    += -lopengl32
 
 CONFIG += c++17 console
 CONFIG -= app_bundle
