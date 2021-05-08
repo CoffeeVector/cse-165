@@ -11,6 +11,7 @@ void pointsCalculatedforOne(int &points, int level, int softDropAmount){
 
     points = points + softDropAmount;
 
+    //we can delete this or the last cout in main
     cout << "Current points is " << points << endl;
 }
 
@@ -24,6 +25,7 @@ void pointsCalculatedforTwo(int &points, int level, int softDropAmount){
 
     points = points + softDropAmount;
 
+    //we can delete this or the last cout in main
     cout << "Current points is " << points << endl;
 }
 
@@ -37,6 +39,7 @@ void pointsCalculatedforThree(int &points, int level, int softDropAmount){
 
     points = points + softDropAmount;
 
+    //we can delete this or the last cout in main
     cout << "Current points is " << points << endl;
 }
 
@@ -50,6 +53,7 @@ void pointsCalculatedforFour(int &points, int level, int softDropAmount){
 
     points = points + softDropAmount;
 
+    //we can delete this or the last cout in main
     cout << "Current points is " << points << endl;
 }
 
@@ -60,33 +64,46 @@ main(){
     int level = 0;
     int softDropAmount = 0;
     int lineclear = 0;
+    int n = 1;
 
-    cout << "What level are you on?" << endl;
-    cin >> level;
+    while(n != 0){
 
-    cout << "lines cleared" << endl;
-    cin >> lineclear;
+        cout << "start loop(press -1 to exit)" << endl;
+        cin >> n;
 
-    cout << "soft drop" << endl;
-    cin >> softDropAmount;
+        cout << "What level are you on?" << endl;
+        cin >> level;
 
-    if(lineclear = 1){
+        cout << "lines cleared" << endl;
+        cin >> lineclear;
 
-        pointsCalculatedforOne(check, level, softDropAmount);
+        cout << "soft drop" << endl;
+        cin >> softDropAmount;
 
-    }else if(lineclear = 2){
+        if(n == -1){
 
-        pointsCalculatedforTwo(check, level, softDropAmount);
+            break;
+        }
 
-    }else if(lineclear = 3){
+        if(lineclear == 1){
 
-        pointsCalculatedforThree(check, level, softDropAmount);
+            pointsCalculatedforOne(check, level, softDropAmount);
 
-    }else if(lineclear = 4){
+        }else if(lineclear == 2){
 
-        pointsCalculatedforFour(check, level, softDropAmount);
-        
+            pointsCalculatedforTwo(check, level, softDropAmount);
+
+        }else if(lineclear == 3){
+
+            pointsCalculatedforThree(check, level, softDropAmount);
+
+        }else if(lineclear == 4){
+
+            pointsCalculatedforFour(check, level, softDropAmount);
+            
+        }
+
     }
-    //still need to add an exit
-    cout << check << endl;
+        //we can delete this or the cout in the methods
+        cout << "final points" << check << endl;
 }
