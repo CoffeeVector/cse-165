@@ -17,6 +17,8 @@
 // if this causes anyone any issues, or if you have to edit the .pro at all to get this to work, let me know and I will do this manually
 #include <GL/glu.h>
 #include "Tetris.h"
+#include "Ground.h"
+#include "Tetris_Graphics.h"
 
 ///
 /// This class is basically what we draw things on. Based on how main is setup, it seems like this class is also what drives everything
@@ -67,6 +69,8 @@ private:
 
     QCursor cursor;
     Tetris t;
+    Ground g;
+    TetrisGraphics tg;
 };
 
 
