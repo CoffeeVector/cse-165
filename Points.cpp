@@ -71,6 +71,11 @@ main(){
         cout << "start loop(press -1 to exit)" << endl;
         cin >> n;
 
+        if(n == -1){
+
+            break;
+        }
+
         cout << "What level are you on?" << endl;
         cin >> level;
 
@@ -79,11 +84,6 @@ main(){
 
         cout << "soft drop" << endl;
         cin >> softDropAmount;
-
-        if(n == -1){
-
-            break;
-        }
 
         if(lineclear == 1){
 
@@ -105,5 +105,5 @@ main(){
 
     }
         //we can delete this or the cout in the methods
-        cout << "final points" << check << endl;
+        cout << "Final points " << check << endl;
 }
