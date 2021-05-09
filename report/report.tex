@@ -13,6 +13,8 @@ Rather than clearing ``lines'', the player is expected to clear layers.
 The pieces will be reminiscent of the original pieces, since most of them can be quite naturally generalized.
 \section{Member Contribution}
 The contribution can be roughly be separated by file as as
+\begin{multicols}{3}
+
 \begin{itemize}
     \item Hunter McClellan
         \begin{enumerate}
@@ -20,16 +22,20 @@ The contribution can be roughly be separated by file as as
             \item \path{mainwindow.cpp}
             \item \path{Ground.h}
         \end{enumerate}
+    \columnbreak
     \item Higinio Ramierz
         \begin{enumerate}
-            \item Point System
+            \item \path{Points.cpp}
+            \item \path{Randomizer.cpp}
         \end{enumerate}
+    \columnbreak
     \item Kevin Zheng
         \begin{enumerate}
             \item \path{Tetris.h}
             \item \path{Tetris_Graphics.h}
         \end{enumerate}
 \end{itemize}
+\end{multicols}
 \section{Implementation}
 \subsection{Tetris.h}
 Handles all game logic
@@ -64,8 +70,30 @@ Handles all game logic
 \end{itemize}
 \subsection{Tetris\_Graphics.h}
 Has a constructor which accepts a \verb|Tetris*|.
-Has a \verb|void draw()| method which draws the Blocks in \verb|Tetris|
-\subsection{}
+Has a \verb|void draw()| method which draws the Blocks in \verb|Tetris|.
+\subsection{mainwindow.h/mainwindow.cpp}
+Handles keyboard input, mouse input, and graphics.
+Has class \verb|MainWindow| which extends \verb|QOpenGLWindow|.
+Implementes the generic methods of \verb|QOpenGLWindow| like in the labs.
+Adds a \verb|SLOT| for the method \verb|GameAdvance()| which is an alias for \verb|Tetris.advance()| which is bound to a \verb|QTimer| for once a second.
+\begin{itemize}
+    \item \verb|void paintGL()|.
+        Starts by clearing the \verb|GL_COLOR_BUFFER_BIT| and the \verb|GL_DEPTH_BUFFER_BIT| and calls \verb|glLoadIdentity|.
+        Then we do a \verb|gl_Translate(0.0, 0.0, -35.0)|, which elevates the camera by \verb|35.0|, this is so the player has a somewhat downward facing view of the playing field.
+        Then we call \verb|glRotatef| for each direction.
+        Then, we can call \verb|Tetris_Graphics.draw()| and \verb|Ground.draw()|, to draw the ground and the game pieces.
+        Afterwards, the controls are handled by checking for if the \verb|W,A,S,D|, $\uparrow$, $\downarrow$, $\leftarrow$, $\rightarrow$ keys have been pressed, and then make the corresponding call to \verb|Tetris.control()|.
+    \item \verb|void keyPressEvent(QKeyEvent *event)| checks which of the \verb|W,A,S,D|, $\uparrow$, $\downarrow$, $\leftarrow$, $\rightarrow$ keys have been pressed, and then sets the corresponding member boolean to be true.
+        The escape key calls \verb|qApp->exit()|to exit the game.
+        Note that these member booleans are also set to false after \verb|paintGL| as to prevent the game from doing the move twice before release.
+    \item \verb|void keyReleaseEvent(QKeyEvent *event)| does the opposite of \verb|keyPressEvent|.
+    \item \verb|void mouseMoveEvent(QMouseEvent *event)| modifies the \verb|cam_x_r, cam_y_r, cam_z_r| according to the position of the mouse.
+        This method also resets the position of the mouse to the center.
+        This is to prevent the mouse to leave the window as the player moves the mouse for a different perspective.
+        To regain normal use of the cursor, exit the game.
+\end{itemize}
+\subsection{Points.cpp}
+\subsection{Randomizer.cpp}
 \section{Lessons/Conclusions}
 
 \end{document}
