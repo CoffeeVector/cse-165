@@ -73,6 +73,7 @@ main(){
         cout << "press 0 to continue" << endl;
         cin >> n;
 
+        //this is when game ends, or manually end the game 
         if(n == -1){
 
             break;
