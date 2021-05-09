@@ -64,7 +64,7 @@ main(){
     int& check = points;
     int level = 0;
     int softDropAmount = 0;
-    int lineclear = 0;
+    int layerclear = 0;
     int n = 1;
 
     while(n != 0){
@@ -81,24 +81,24 @@ main(){
         cin >> level;
 
         cout << "lines cleared" << endl;
-        cin >> lineclear;
+        cin >> layerclear;
 
         cout << "soft drop" << endl;
         cin >> softDropAmount;
 
-        if(lineclear == 1){
+        if(layerclear == 1){
 
             pointsCalculatedforOne(check, level, softDropAmount);
 
-        }else if(lineclear == 2){
+        }else if(layerclear == 2){
 
             pointsCalculatedforTwo(check, level, softDropAmount);
 
-        }else if(lineclear == 3){
+        }else if(layerclear == 3){
 
             pointsCalculatedforThree(check, level, softDropAmount);
 
-        }else if(lineclear == 4){
+        }else if(layerclear == 4){
 
             pointsCalculatedforFour(check, level, softDropAmount);
             
