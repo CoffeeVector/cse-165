@@ -3,6 +3,10 @@
 // I pretty much winged this whole thing, so expect lots of bugs. -KZ
 
 #include <iostream>
+#include <utility>
+#include <vector>
+
+using namespace std;
 
 enum Moves {
     DOWN, LEFT, RIGHT, FORWARD, BACK, PITCH, ROLL, YAW
@@ -61,7 +65,7 @@ class Tetris {
             case RIGHT:
             case FORWARD:
             case BACK:
-                translate_piece(move);
+                return translate_piece(move);
                 break;
             case PITCH:
             case ROLL:
@@ -69,6 +73,7 @@ class Tetris {
                 rotate_piece(move);
                 break;
         }
+        return PLAYING;
     }
 
     GameState translate_piece(Moves move) {
@@ -77,7 +82,7 @@ class Tetris {
         bool valid_move = true;
         for (int i = 0; i < w*l*h; i++) {
             ind2sub(i, x, y, z);
-            bool condition = state[x][y][z] && state[x][y][z]->falling;
+            bool condition = state[x][y][z] != NULL && state[x][y][z]->falling;
             switch (move) {
                 case DOWN:
                     // the block must be falling and below can either be the ground, or another block which is not falling.
@@ -127,14 +132,14 @@ class Tetris {
                     break;
                 case RIGHT:
                 case FORWARD:
-                    i = w*l*h;
+                    i = w*l*h-1;
                     i_ex = 0;
                     up = false;
                     break;
             }
             for (; up ? i < i_ex : i >= i_ex; up ? i++ : i--) {
                 ind2sub(i, x, y, z);
-                if (state[x][y][z] && state[x][y][z]->falling) {
+                if (state[x][y][z] != NULL && state[x][y][z]->falling) {
                     switch(move) {
                         case DOWN:
                             state[x  ][y  ][z-1] = state[x][y][z];
@@ -160,7 +165,85 @@ class Tetris {
     }
 
 
-    void rotate_piece(Moves m) {
+    void rotate_piece(Moves move) {
+        int x, y, z;
+        vector<pair<Block, int*>> t; // translations, formatted as <Block, {x', y', z'}>
+
+        int min_x=w, min_y=l, min_z=h;
+        int max_x=0, max_y=0, max_z=0;
+        for (int i = 0; i < w*l*h; i++) {
+            ind2sub(i, x, y, z);
+            if (state[x][y][z] != NULL && state[x][y][z]->falling) {
+                if (x > max_x) {
+                    max_x = x;
+                }
+                if (x < min_x) {
+                    min_x = x;
+                }
+                if (y > max_y) {
+                    max_y = y;
+                }
+                if (y < min_y) {
+                    min_y = y;
+                }
+                if (z > max_z) {
+                    max_z = z;
+                }
+                if (z < min_z) {
+                    min_z = z;
+                }
+                t.push_back(make_pair(*(state[x][y][z]), new int[3]{x, y, z}));
+            }
+        }
+
+        int cen_x=(max_x + min_x)/2;
+        int cen_y=(max_y + min_y)/2;
+        int cen_z=(max_z + min_z)/2;
+        bool valid_move = true;
+        for (int i = 0; i < t.size(); i++) {
+            int* pos = t[i].second;
+            int* new_pos = new int[3]{-1, -1, -1};
+            switch(move) {
+                case PITCH:
+                    new_pos[0] =   pos[0];
+                    new_pos[1] = -(pos[2] - cen_z) + cen_y;
+                    new_pos[2] =   pos[1] - cen_y  + cen_z;
+                    break;
+                case ROLL:
+                    new_pos[0] =   pos[2] - cen_z  + cen_x;
+                    new_pos[1] =   pos[1];
+                    new_pos[2] = -(pos[0] - cen_x) + cen_z;
+                    break;
+                case YAW:
+                    new_pos[0] = -(pos[1] - cen_y) + cen_x;
+                    new_pos[1] =   pos[0] - cen_x  + cen_y;
+                    new_pos[2] =   pos[2];
+                    break;
+            }
+            if (new_pos[0] < 0 || new_pos[0] >= w || new_pos[1] < 0 || new_pos[1] >=l || new_pos[2] < 0 || new_pos[2] >=h) {
+                valid_move = false;
+                break;
+            }
+            if (state[new_pos[0]][new_pos[1]][new_pos[2]] != NULL && !state[new_pos[0]][new_pos[1]][new_pos[2]]->falling) {
+                valid_move = false;
+                break;
+            }
+            t[i].second = new_pos;
+        }
+
+        if (valid_move) {
+            for (int i = 0; i < w*l*h; i++) {
+                ind2sub(i, x, y, z);
+                if (state[x][y][z] != NULL && state[x][y][z]->falling) {
+                    state[x][y][z] = NULL;
+                }
+            }
+            for (auto i:  t) {
+                int* pos = i.second;
+                state[pos[0]][pos[1]][pos[2]] = new Block;
+                *(state[pos[0]][pos[1]][pos[2]]) = i.first;
+            }
+        }
     }
 
     GameState spawn_piece() {

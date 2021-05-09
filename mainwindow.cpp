@@ -120,6 +120,18 @@ void MainWindow::paintGL() {
         }
         key_down = false;
     }
+    if (key_left) {
+        t.control(PITCH);
+        key_left = false;
+    }
+    if (key_right) {
+        t.control(ROLL);
+        key_right = false;
+    }
+    if (key_up) {
+        t.control(YAW);
+        key_up = false;
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -193,7 +205,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 
     float sensitivity = 0.1;
 
-    cam_y_r += deltaX * sensitivity;
+    cam_z_r += deltaX * sensitivity;
     cam_x_r += deltaY * sensitivity;
 
     cursor.setPos(this->x() + lastX,this->y() + lastY);
