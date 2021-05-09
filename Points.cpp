@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Tetris.h"
 using namespace std;
 
 void pointsCalculatedforOne(int &points, int level, int softDropAmount){
