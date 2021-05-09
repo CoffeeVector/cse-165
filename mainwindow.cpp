@@ -6,16 +6,21 @@ MainWindow::MainWindow(QWidget *parent) : QOpenGLWindow(), t(), g(&t), tg(&t) {
     setSurfaceType(QWindow::OpenGLSurface);
 
     //// Setup opengl format
-    //QSurfaceFormat format;
-    //format.setProfile(QSurfaceFormat::CompatibilityProfile);
-    //format.setVersion(4,3); // For some reason the labs use 2.2
-    //setFormat(format);
+    QSurfaceFormat format;
+    format.setProfile(QSurfaceFormat::CompatibilityProfile);
+    format.setVersion(2,2); // For some reason the labs use 2.2
+    format.setDepthBufferSize(1024);
+    setFormat(format);
 
     //// Setup opengl context (the thing that is drawn on)
-    //context = new QOpenGLContext;
-    //context->setFormat(format);
-    //context->create();
-    //context->makeCurrent(this);
+    context = new QOpenGLContext;
+    context->setFormat(format);
+    context->create();
+    context->makeCurrent(this);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHT0);
+    glDepthFunc(GL_LEQUAL);
 
     cursor = QCursor(Qt::BlankCursor);
     QApplication::setOverrideCursor(cursor);
@@ -45,6 +50,7 @@ void MainWindow::initializeGL() {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHT0);
+    glDepthFunc(GL_LEQUAL);
     resizeGL(this->width(),this->height());
 }
 
@@ -88,7 +94,7 @@ void MainWindow::paintGL() {
     glRotatef(cam_y_r, 0.0, 1.0, 0.0);
     glRotatef(cam_z_r, 0.0, 0.0, 1.0);
 
-    g.draw(0.9f);
+    g.draw(1.0f);
     tg.draw();
     glFlush();
 

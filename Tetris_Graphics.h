@@ -18,6 +18,7 @@ public:
     void draw() {
         int x, y, z;
         float r, g, b;
+        float distance = 1;
         float block_width = 0.9;
         //float color_width = 0.9;
         for (int i = 0; i < t->w*t->l*t->h; i++) {
@@ -60,6 +61,7 @@ public:
                 };
 
                 int mode[] = {GL_FILL, GL_LINE};
+                glLineWidth(5);
                 for (int i = 0; i < 2; i++) { // draw twice, once with borders, and another wth fill
                     glPolygonMode(GL_FRONT_AND_BACK, mode[i]);
                     glBegin(GL_QUADS); // bottom
@@ -70,9 +72,9 @@ public:
                         }
                         for (int corner = 0; corner < 24; corner++) {
                             glVertex3f(
-                                block_width*(x + cube_coords[corner][0]),
-                                block_width*(y + cube_coords[corner][1]),
-                                block_width*(z + cube_coords[corner][2])
+                                distance*x + block_width*cube_coords[corner][0],
+                                distance*y + block_width*cube_coords[corner][1],
+                                distance*z + block_width*cube_coords[corner][2]
                             );
                         }
                     glEnd();
