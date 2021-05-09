@@ -41,7 +41,7 @@ protected:
     void paintEvent(QPaintEvent *event);
 
     void keyPressEvent(QKeyEvent *); // logs which keys are pressed
-    void keyReleaseEvent(QKeyEvent *); // logs which keys are released
+    //void keyReleaseEvent(QKeyEvent *); // logs which keys are released
 
     void mousePressEvent(QMouseEvent *);
 
