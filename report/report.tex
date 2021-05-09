@@ -2,15 +2,70 @@
 \usepackage{xcolor, graphicx, savetrees}
 \usepackage{amsmath, amsthm, amssymb, physics, mathtools, siunitx, cancel}
 \usepackage{multicol, subcaption}
+\usepackage{url, listings}
 \title{CSE 165 Final Project Report}
 \author{Hunter McClellan \and Higinio Ramirez \and Kevin Zheng}
 \begin{document}
 \maketitle
 \section{Project Description}
-Our project is recreating the famous Tetris game in 3 dimensions.
-A ``tetris'', the 
+Our project is recreating the famous Tetris game in 3D.
+Rather than clearing ``lines'', the player is expected to clear layers.
+The pieces will be reminiscent of the original pieces, since most of them can be quite naturally generalized.
 \section{Member Contribution}
+The contribution can be roughly be separated by file as as
+\begin{itemize}
+    \item Hunter McClellan
+        \begin{enumerate}
+            \item \path{mainwindow.h}
+            \item \path{mainwindow.cpp}
+            \item \path{Ground.h}
+        \end{enumerate}
+    \item Higinio Ramierz
+        \begin{enumerate}
+            \item Point System
+        \end{enumerate}
+    \item Kevin Zheng
+        \begin{enumerate}
+            \item \path{Tetris.h}
+            \item \path{Tetris_Graphics.h}
+        \end{enumerate}
+\end{itemize}
 \section{Implementation}
+\subsection{Tetris.h}
+Handles all game logic
+\begin{itemize}
+    \item \verb|GameState| enum: has only two members, \verb|PLAYING| and \verb|LOSE|. Sorry, you can't win this game!
+    \item \verb|Moves| enum: has eight members, \verb|DOWN|, \verb|LEFT|, \verb|RIGHT|, \verb|FORWARD|, \verb|BACK|, \verb|PITCH|, \verb|ROLL|, \verb|YAW|.
+    \item \verb|Block| struct: has three integers for red, green, blue which range from 0 to 255.
+        The \verb|Block| struct also has one bool that indicates whether or not the block is falling.
+        Falling in this context is synonymous with ``in play.''
+        Note that the location of the \verb|Block| is not handled by the \verb|Block|, it is handled by the \verb|Tetris| class.
+    \item \verb|Tetris| class: has a quadruple \verb|Block| pointer denoted by \verb|state|.
+        This can be best understood as three dimensional array of \verb|Block| pointers.
+        This number of pointers is necessary, since want to allow parts of the array to be \verb|NULL|.
+        There are three integers for width, length, and height of the playing field.
+        \begin{itemize}
+            \item \verb|ind2sub(int ind, int &x, int &y, int &z)|. Short for ``index to subscript''.
+                This method accepts a number from 0 to \verb|w*l*h-1|, and ``returns by reference'' the corresponding \verb|x|, \verb|y|, \verb|z| coordinates.
+                This is used in the cases where we want to loop through every \verb|Block| in \verb|state|, but would rather not use a triple for loop.
+                Instead, we can make one loop, and use \verb|ind2sub|.
+            \item \verb|int sub2ind(int x, int y, int z)|: This is the reverse operation of \verb|ind2sub|.
+            \item \verb|GameState control(Moves moves)| accepts a member of the \verb|Move| enum and modifies the \verb|state| accordingly.
+                If the control made by the player results in a loss or not will be reflected in the \verb|GameState| return.
+                The body of this method is simply a \verb|switch| statement calling either \verb|translate_piece| or \verb|rotate_piece|.
+            \item \verb|GameState translate_piece(Moves move)| handles the translation of pieces. This is called by \verb|advance| as well as \verb|control|
+            \item \verb|void rotate_piece(Moves move)| rotates the piece.
+                Note that the return is \verb|void| since a rotation can never cause a loss.
+            \item \verb|void handle_layer_clear()| Checks for cleared layers, and remove them.
+            \item \verb|GameState spawn_piece()| attempts to spawn in a random piece at the top of the playing field.
+                Failure to due so is the definition of a loss, and such will be returned.
+            \item \verb|GameState advance()| is an alias for \verb|translate_piece(DOWN)|, as well as a \verb|handle_layer_clear()|.
+        \end{itemize}
+\end{itemize}
+\subsection{Tetris\_Graphics.h}
+Has a constructor which accepts a \verb|Tetris*|.
+Has a \verb|void draw()| method which draws the Blocks in \verb|Tetris|
+\subsection{}
 \section{Lessons/Conclusions}
 
 \end{document}
