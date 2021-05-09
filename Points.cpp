@@ -65,11 +65,12 @@ main(){
     int level = 0;
     int softDropAmount = 0;
     int layerclear = 0;
-    int n = 1;
+    int n = 0;
 
-    while(n != 0){
+    while(true){
 
         cout << "start loop(press -1 to exit)" << endl;
+        cout << "press 0 to continue" << endl;
         cin >> n;
 
         if(n == -1){
