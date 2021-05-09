@@ -74,11 +74,11 @@ class Tetris {
                 break;
         }
 
-        handle_tetris();
+        handle_layer_clear();
         return PLAYING;
     }
 
-    void handle_tetris() {
+    void handle_layer_clear() {
         for (int z = 0; z < h; z++) {
             bool tetris = true;
             for (int x = 0; x < w; x++) {
@@ -312,7 +312,7 @@ class Tetris {
 
     GameState advance() {
         GameState ret = translate_piece(DOWN);
-        handle_tetris();
+        handle_layer_clear();
         return ret;
     }
 
