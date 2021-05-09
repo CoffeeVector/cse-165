@@ -26,7 +26,7 @@ class Tetris {
     Block**** state; // state[x][y][z], where z is the falling direction. x and y is arbitrary.
     int w, l, h;
 
-    Tetris(int w = 8, int l = 8, int h = 10) {
+    Tetris(int w = 6, int l = 6, int h = 10) {
         this->w = w;
         this->l = l;
         this->h = h;
@@ -73,7 +73,37 @@ class Tetris {
                 rotate_piece(move);
                 break;
         }
+
+        handle_tetris();
         return PLAYING;
+    }
+
+    void handle_tetris() {
+        for (int z = 0; z < h; z++) {
+            bool tetris = true;
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < l; y++) {
+                    if (state[x][y][z] == NULL || state[x][y][z]->falling) {
+                        tetris = false;
+                    }
+                }
+            }
+
+            if (tetris) {
+                for (int zp = z; zp < h; zp++) {
+                    for (int x = 0; x < w; x++) {
+                        for (int y = 0; y < l; y++) {
+                            if (zp == h-1) {
+                                state[x][y][zp] = NULL;
+                            } else {
+                                state[x][y][zp] = state[x][y][zp + 1];
+                            }
+                        }
+                    }
+                }
+                z--;
+            }
+        }
     }
 
     GameState translate_piece(Moves move) {
@@ -267,7 +297,7 @@ class Tetris {
             { 0,  0,  0},
         };
 
-        int o[] = {1, 1, 9}; // origin
+        int o[] = {w/2, l/2, h-1}; // origin
         for (auto coord: coords) {
             if (state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] != NULL) { // if not null, end the game, you lose.
                 return LOSS;
@@ -281,7 +311,9 @@ class Tetris {
     }
 
     GameState advance() {
-        return translate_piece(DOWN);
+        GameState ret = translate_piece(DOWN);
+        handle_tetris();
+        return ret;
     }
 
     void print() {
