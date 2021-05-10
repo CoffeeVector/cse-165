@@ -165,7 +165,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void MainWindow::keyReleaseEvent(QKeyEvent *event) {
+/*void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_W) {
         key_w = false;
     }
@@ -190,7 +190,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Right) {
         key_right = false;
     }
-}
+}*/
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
 

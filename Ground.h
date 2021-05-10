@@ -9,15 +9,15 @@
 #include "Tetris.h"
 
 class Ground {
-    float x, y, z; // central position
-    float w, l;
+    int w, l;
+    float border; // how much green space to have. Set to a large number for the entire background to be green
 public:
-    Ground(Tetris *t) : x(0), y(0), z(0), w(t->w), l(t->l) {}
+    Ground(Tetris *t) : w(t->w), l(t->l), border(2.0f) {}
     ~Ground () {}
 
     void draw(float bl_sz)  {
         // Green background
-        float border = 2.0f; // how much green space to have. Set to a large number for the entire background to be green
+
         glPolygonMode(GL_BACK, GL_FILL); // Change to GL_FRONT_AND_BACK if you want the other side to be filled as well
         glBegin(GL_POLYGON);
             glColor3f(0.1f, 0.9f, 0.2f); // the main green background (grass I guess)

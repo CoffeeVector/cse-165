@@ -92,6 +92,20 @@ Adds a \verb|SLOT| for the method \verb|GameAdvance()| which is an alias for \ve
         This is to prevent the mouse to leave the window as the player moves the mouse for a different perspective.
         To regain normal use of the cursor, exit the game.
 \end{itemize}
+\subsection{Ground.h}
+Draws the ground and represents the bottom of the \verb|Tetris*| play area.
+Has a constructor that takes in a \verb|Tetris*| Object.
+Has three private variables.
+\verb|int w, l| are set to the size of the block 3d matrix from \verb|Tetris|.
+\verb|float border| is set to a predefined value of \verb|2.0f|.
+\begin{itemize}
+    \item \verb|void draw(float bl_sz)|. draws the ground.
+    Takes in a float \verb|bl_sz| which represents the size of each block.
+    The ground is filled when the camera is in the initial position, but is transparent after the camera has been moved 180 degrees to allow easier view of the game board.
+    The first loop draws a green rectangle with the size based on \verb|w| and \verb|l| multiplied by \verb|bl_sz|, plus a border defined in the \verb|border| variable.
+    The second loop draws a grey rectangle based on \verb|w| and \verb|l| multiplied by \verb|bl_sz|.
+    the third loop draws lines representing the edges between \verb|Block|s.
+\end{itemize}
 \subsection{Points.cpp}
 The points system is based on the original NES Tetris scoring system
 \begin{itemize}
