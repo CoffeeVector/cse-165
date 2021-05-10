@@ -13,6 +13,8 @@ Rather than clearing ``lines'', the player is expected to clear layers.
 The pieces will be reminiscent of the original pieces, since most of them can be quite naturally generalized.
 \section{Member Contribution}
 The contribution can be roughly be separated by file as as
+\begin{multicols}{3}
+
 \begin{itemize}
     \item Hunter McClellan
         \begin{enumerate}
@@ -20,16 +22,20 @@ The contribution can be roughly be separated by file as as
             \item \path{mainwindow.cpp}
             \item \path{Ground.h}
         \end{enumerate}
-    \item Higinio Ramierz
+    \columnbreak
+    \item Higinio Ramirez
         \begin{enumerate}
-            \item Point System
+            \item \path{Points.cpp}
+            \item \path{Randomizer.cpp}
         \end{enumerate}
+    \columnbreak
     \item Kevin Zheng
         \begin{enumerate}
             \item \path{Tetris.h}
             \item \path{Tetris_Graphics.h}
         \end{enumerate}
 \end{itemize}
+\end{multicols}
 \section{Implementation}
 \subsection{Tetris.h}
 Handles all game logic
@@ -64,8 +70,61 @@ Handles all game logic
 \end{itemize}
 \subsection{Tetris\_Graphics.h}
 Has a constructor which accepts a \verb|Tetris*|.
-Has a \verb|void draw()| method which draws the Blocks in \verb|Tetris|
-\subsection{}
+Has a \verb|void draw()| method which draws the Blocks in \verb|Tetris|.
+\subsection{mainwindow.h/mainwindow.cpp}
+Handles keyboard input, mouse input, and graphics.
+Has class \verb|MainWindow| which extends \verb|QOpenGLWindow|.
+Implementes the generic methods of \verb|QOpenGLWindow| like in the labs.
+Adds a \verb|SLOT| for the method \verb|GameAdvance()| which is an alias for \verb|Tetris.advance()| which is bound to a \verb|QTimer| for once a second.
+\begin{itemize}
+    \item \verb|void paintGL()|.
+        Starts by clearing the \verb|GL_COLOR_BUFFER_BIT| and the \verb|GL_DEPTH_BUFFER_BIT| and calls \verb|glLoadIdentity|.
+        Then we do a \verb|gl_Translate(0.0, 0.0, -35.0)|, which elevates the camera by \verb|35.0|, this is so the player has a somewhat downward facing view of the playing field.
+        Then we call \verb|glRotatef| for each direction.
+        Then, we can call \verb|Tetris_Graphics.draw()| and \verb|Ground.draw()|, to draw the ground and the game pieces.
+        Afterwards, the controls are handled by checking for if the \verb|W,A,S,D|, $\uparrow$, $\downarrow$, $\leftarrow$, $\rightarrow$ keys have been pressed, and then make the corresponding call to \verb|Tetris.control()|.
+    \item \verb|void keyPressEvent(QKeyEvent *event)| checks which of the \verb|W,A,S,D|, $\uparrow$, $\downarrow$, $\leftarrow$, $\rightarrow$ keys have been pressed, and then sets the corresponding member boolean to be true.
+        The escape key calls \verb|qApp->exit()|to exit the game.
+        Note that these member booleans are also set to false after \verb|paintGL| as to prevent the game from doing the move twice before release.
+    \item \verb|void keyReleaseEvent(QKeyEvent *event)| does the opposite of \verb|keyPressEvent|.
+    \item \verb|void mouseMoveEvent(QMouseEvent *event)| modifies the \verb|cam_x_r, cam_y_r, cam_z_r| according to the position of the mouse.
+        This method also resets the position of the mouse to the center.
+        This is to prevent the mouse to leave the window as the player moves the mouse for a different perspective.
+        To regain normal use of the cursor, exit the game.
+\end{itemize}
+\subsection{Points.cpp}
+The points system is based on the original NES Tetris scoring system
+\begin{itemize}
+    \item Points calculated: has to calculate the points given through layers cleared and by the level that we are currently on.
+        \begin{itemize}
+            \item The max layers cleared are four and this is just like normal Tetris where you will get the most points for completing a 4x4x8 layer. First, we need to get the level, layers that are being cleared so we know which points system to use. From this point, we have abased level 0 with a certain amount of points for each section. Every increase in layers cleared will give more than double the previous layer as a way to incentivize staking as many layers as you can before you clear. We start with 40 points at level 0 and double with every signal level increase. The points themselves are 40,100,300, and finally 1200. The equation that we used is 40(level + 1) and just change it depending on the layers being cleared.
+            \item In order to keep the points for later as we would be continuously adding on points as the game progressed, we just used a reference to points and check the points and add whatever we need to from the game.
+        \end{itemize}
+    \item Soft drop: Pressing down the key to dropping a Tetris piece a little faster and again a point for every section drop.
+        \begin{itemize}
+            \item In the classic Tetris model, you would get points for every piece that you drop faster than the set speed. These points do not scale up with the Tetris levels as it shouldn’t be a real game-changer when it comes down to clearing layers. If two people are playing together at the same time with the same pieces, this extra feature will incentivize a more aggressive playstyle that might make some people overestimate their abilities and drop out faster. The opposite is also true because if a person is good enough they can get a significant amount of points for going faster. Also in the lower levels, the pieces that drop can be relatively slow to some people, so to counteract that soft dropping allows the play to play at a relatively faster rate and enjoy a faster and therefore better game as the player will not have to wait for a pieces to drop to get another piece on the board.
+        \end{itemize}
+\end{itemize}
+
+\subsection{Randomizer.cpp}
+A basic randomizer for the Tetris pieces that come in to play
+\begin{itemize}
+    \item How the randomizer works: We take the number of pieces and us srand(time(0)); to set up the random times.
+        \begin{itemize}
+            \item While making this project the randomizers that I made only contained rand() \% 7 +1 to get the values of 1 through 7, but I ran into a problem as the values that I was getting were not truly random as the machine was giving random numbers, but keeping that same location of random numbers so we will not be getting truly random numbers. This is where srand(time(0)) comes into play, it allows a truly random set of numbers to be chosen per game.
+        \end{itemize}
+    \item Wanting more randomization: Based on an NES Tetris game I have played
+        \begin{itemize}
+            \item While making the randomizer I remembered that in NES Tetris there was randomization, but they did something else to have even more randomization. I wanted to make sure that two separate pieces wouldn’t have a higher probability to be different. In order to achieve this, I made a check function where the first value of the randomizer would be saved to then check a second randomizer if the value was the same as the previous piece that was given. If this is true then we will activate another randomizer that will give us another number to use and if this number is the same it wouldn’t matter at this point as you might have been destained to get that certain piece, but if you get a different number then we will use that new number and save it for the check later on.
+        \end{itemize}
+\end{itemize}
 \section{Lessons/Conclusions}
+\subsection{Depth Bit}
+The depth bit, or depth buffer, is a grayscale image.
+Unlike a regular grayscale image, it does not store brightness, rather it stores the depth of all of the colors on screen.
+This way, if another object is attempted to be drawn on the screen, it will compare it's depth to the depth buffer, and only write if it's visible.
+
+Not all systems will allocate space for the depth bit, as on a Linux machine, the depth buffer did not work unless the buffer was explicitly allocated.
+On Windows machines, the depth buffer has a default allocation, so the allocation function was not required.
 
 \end{document}
