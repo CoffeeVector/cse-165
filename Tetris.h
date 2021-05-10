@@ -284,28 +284,76 @@ class Tetris {
         //     ***
         // game piece
         // TODO add more
-        int coords[10][3] = {
-            {-1, -1, -1},
-            {-1,  0, -1},
-            {-1,  1, -1},
-            { 0, -1, -1},
-            { 0,  0, -1},
-            { 0,  1, -1},
-            { 1, -1, -1},
-            { 1,  0, -1},
-            { 1,  1, -1},
-            { 0,  0,  0},
-        };
+        vector<pair<int*, vector<int*>*>> pieces;
+        pieces.push_back(make_pair(
+            new int[3] {255, 0, 0},
+            new vector<int*>{
+                new int[3]{-1, -1, -1},
+                new int[3]{-1,  0, -1},
+                new int[3]{-1,  1, -1},
+                new int[3]{ 0, -1, -1},
+                new int[3]{ 0,  0, -1},
+                new int[3]{ 0,  1, -1},
+                new int[3]{ 1, -1, -1},
+                new int[3]{ 1,  0, -1},
+                new int[3]{ 1,  1, -1},
+                new int[3]{ 0,  0,  0},
+            }
+        ));
+        pieces.push_back(make_pair(
+            new int[3] {0, 255, 0},
+            new vector<int*>{
+                new int[3]{0, 0,  0},
+                new int[3]{0, 0, -1},
+                new int[3]{0, 0, -2},
+                new int[3]{0, 0, -3},
+            }
+        ));
+        pieces.push_back(make_pair(
+            new int[3] {0, 0, 255},
+            new vector<int*>{
+                new int[3]{0, 0, 0},
+                new int[3]{0, 1, 0},
+                new int[3]{1, 0, 0},
+                new int[3]{1, 1, 0},
+                new int[3]{0, 0, -1},
+                new int[3]{0, 1, -1},
+                new int[3]{1, 0, -1},
+                new int[3]{1, 1, -1},
+            }
+        ));
+        pieces.push_back(make_pair(
+            new int[3] {255, 255, 0},
+            new vector<int*>{
+                new int[3]{0, 0,  0},
+                new int[3]{0, 0, -1},
+                new int[3]{0, 0, -2},
+                new int[3]{0, 1, -2},
+            }
+        ));
+        pieces.push_back(make_pair(
+            new int[3] {0, 255, 255},
+            new vector<int*>{
+                new int[3]{0, 0,  0},
+                new int[3]{0, 0, -1},
+                new int[3]{0, 1, -1},
+                new int[3]{0, 1, -2},
+            }
+        ));
+
+        int piece = rand() % pieces.size();
+        pair<int*, vector<int*>*> pair = pieces[piece];
 
         int o[] = {w/2, l/2, h-1}; // origin
-        for (auto coord: coords) {
+        int* rgb = pair.first;
+        for (auto coord: *(pair.second)) {
             if (state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] != NULL) { // if not null, end the game, you lose.
                 return LOSS;
             }
         }
 
-        for (auto coord: coords) {
-            state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] = new Block{r, g, b, true};
+        for (auto coord: *(pair.second)) {
+            state[coord[0] + o[0]][coord[1] + o[1]][coord[2] + o[2]] = new Block{rgb[0], rgb[1], rgb[2], true};
         }
         return PLAYING;
     }
