@@ -322,6 +322,24 @@ class Tetris {
                 new int[3]{1, 1, -1},
             }
         ));
+        pieces.push_back(make_pair(
+            new int[3] {255, 255, 0},
+            new vector<int*>{
+                new int[3]{0, 0,  0},
+                new int[3]{0, 0, -1},
+                new int[3]{0, 0, -2},
+                new int[3]{0, 1, -2},
+            }
+        ));
+        pieces.push_back(make_pair(
+            new int[3] {0, 255, 255},
+            new vector<int*>{
+                new int[3]{0, 0,  0},
+                new int[3]{0, 0, -1},
+                new int[3]{0, 1, -1},
+                new int[3]{0, 1, -2},
+            }
+        ));
 
         int piece = rand() % pieces.size();
         pair<int*, vector<int*>*> pair = pieces[piece];
